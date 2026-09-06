@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.ipynb_checkpoints/
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Captured data & pipeline outputs (large binaries, don't belong in git) ---
+data/
+outputs/
+checkpoints/
+renders/
+*.ply
+*.splat
+*.pt
+*.pth
+*.ckpt
+
+# --- COLMAP working files ---
+sparse/
+dense/
+*.bin
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# --- Env files (in case any API keys or config get added later) ---
+.env
+.env.local
