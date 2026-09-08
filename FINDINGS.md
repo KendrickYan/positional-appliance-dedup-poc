@@ -4,13 +4,22 @@
 
 Two capture attempts of the same real, small, irregularly-shaped room. The first (portrait, standard walking-orbit technique) failed to produce a unified reconstruction. The second (landscape, deliberate room-emphasis technique) succeeded completely. The dominant variable was **capture technique, not raw frame count or footage quantity** — attempt 2 used half as many frames and got a strictly better result.
 
-| | Attempt 1 | Attempt 2 |
-|---|---|---|
-| Orientation | Portrait | Landscape |
-| Frames extracted | 302 | 150 |
-| Camera intrinsics | Default guess (`fx=fy=2304`, wrong — see below) | Corrected guess (`fx=fy=1600`), shared across all frames |
-| Final registered | 239 / 302 (79%), split across 6–7 disconnected fragments | **150 / 150 (100%), one unified reconstruction** |
-| Mean reprojection error | 0.65–0.93px per fragment (fragments never joined) | 0.897px (after merge + bundle adjustment) |
+|                         | Attempt 1                                                 | Attempt 2                                                  |
+| ----------------------- | --------------------------------------------------------- | ---------------------------------------------------------- |
+| Orientation             | Portrait                                                  | Landscape                                                  |
+| Frames extracted        | 302                                                       | 150                                                        |
+| Camera intrinsics       | Default guess (`fx=fy=2304`, wrong — see below)        | Corrected guess (`fx=fy=1600`), shared across all frames |
+| Final registered        | 239 / 302 (79%), split across 6–7 disconnected fragments | **150 / 150 (100%), one unified reconstruction**     |
+| Mean reprojection error | 0.65–0.93px per fragment (fragments never joined)        | 0.897px (after merge + bundle adjustment)                  |
+
+### Scale calibration
+
+Reference: monitor bottom bezel corners, measured 54cm in real life.
+Same two points in `fused.ply` (CloudCompare point-to-point): 2.798143 COLMAP units.
+
+**scale_factor = 19.2985 cm / COLMAP unit**
+
+To convert a desired real-world distance threshold into COLMAP units: `eps = desired_cm / 19.2985`
 
 ## Attempt 1 — what went wrong, and why it wasn't just "bad scanning"
 
