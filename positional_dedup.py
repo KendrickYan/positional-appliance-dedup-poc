@@ -43,7 +43,12 @@ SCALE_CM_PER_UNIT = 19.2985  # from FINDINGS.md monitor calibration
 BBOX_INSET_FRACTION = 0.175   # skip outer 17.5% of the box on each side
 GRID_SIZE = 5                 # 5x5 sample grid inside the inset region
 
-DEDUP_MIN_SPACING_CM = 50.0   # two detections closer than this = same appliance
+DEDUP_MIN_SPACING_CM = 20.0   # two detections closer than this = same appliance
+                               # tuned from empirical bounds: same-object noise floor ~1-10cm,
+                               # first observed false-merge (two distinct objects) at ~25cm.
+                               # 20cm sits above the noise floor with margin, below the one
+                               # confirmed too-close-together failure. Not yet validated against
+                               # real appliance spacing — see FINDINGS.md.
 DBSCAN_EPS_UNITS = DEDUP_MIN_SPACING_CM / SCALE_CM_PER_UNIT
 DBSCAN_MIN_SAMPLES = 3        # tune once real detector output exists
 

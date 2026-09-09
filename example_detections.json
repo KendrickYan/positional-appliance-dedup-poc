@@ -28,5 +28,35 @@
     "image": "frame_0030.png",
     "class": "test_object",
     "bbox": [1768, 66, 1918, 311]
+  },
+  {
+    "image": "frame_0040.png",
+    "class": "test_object",
+    "bbox": [106, 676, 190, 717]
+  },
+  {
+    "image": "frame_0106.png",
+    "class": "test_object",
+    "bbox": [327, 912, 414, 949]
+  },
+  {
+    "image": "frame_0148.png",
+    "class": "test_object",
+    "bbox": [882, 572, 914, 582]
+  },
+  {
+    "image": "frame_0001.png",
+    "class": "test_object",
+    "bbox": [787, 507, 813, 544]
+  },
+  {
+    "image": "frame_0086.png",
+    "class": "test_object",
+    "bbox": [1288, 677, 1370, 812]
+  },
+  {
+    "image": "frame_0102.png",
+    "class": "test_object",
+    "bbox": [1007, 393, 1086, 494]
   }
 ]
