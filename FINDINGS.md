@@ -45,3 +45,17 @@ For a small, irregularly-shaped real room, **capture technique and orientation m
 ## Open question not yet answered
 
 Whether this reconstruction is clean enough for `gsplat` training to produce a usable splat is still untested — sparse SfM registering successfully doesn't guarantee downstream splat quality. That's the next step.
+
+---
+
+## Positional deduplication — first working test
+
+Implemented `positional_dedup.py`: per-detection 3D position estimated via COLMAP MVS depth-map backprojection (median of several sampled points inside an inset bbox grid), with fused-point-cloud reprojection as a fallback when depth-map lookup fails. Positions grouped by class label and clustered with DBSCAN, `eps` set in real-world centimeters via the scale calibration above.
+
+**Test 1 — same object, adjacent frames (frame_0084/85/86, monitor):** three independent position estimates landed within ~0.9–3.7cm of each other. All resolved via depth map directly (no fallback needed), 8–16 valid samples per detection out of a 25-point grid.
+
+**Test 2 — same object, wide baseline (frame_0003/85/137, spanning nearly the full 150-frame walk):** pairwise spread widened to ~3–8.6cm — looser than the adjacent-frame case, as expected with more viewpoint diversity, but still well within tolerance.
+
+**Test 3 — two distinct objects, deliberately mislabeled with the same class string, ~3m apart in the room:** 6 detections (3 per object) correctly split into 2 DBSCAN clusters, 0 detections flagged as noise. This is the core case appearance-based re-id (CLIP/OSNet embeddings) cannot handle — two objects made appearance-indistinguishable on purpose here — and position-based clustering resolved it correctly.
+
+**Not yet tested:** whether the `eps` threshold (currently 50cm) correctly separates two distinct objects placed *close together* (e.g. 1–1.5m apart, closer to a realistic worst case like adjacent desk monitors) rather than the ~3m separation used in Test 3, which gave DBSCAN a wide margin regardless of estimate noise.

@@ -1,0 +1,32 @@
+[
+  {
+    "image": "frame_0137.png",
+    "class": "test_object",
+    "bbox": [1165, 275, 1454, 444]
+  },
+  {
+    "image": "frame_0085.png",
+    "class": "test_object",
+    "bbox": [1004, 88, 1742, 538]
+  },
+  {
+    "image": "frame_0003.png",
+    "class": "test_object",
+    "bbox": [583, 283, 839, 419]
+  },
+  {
+    "image": "frame_0006.png",
+    "class": "test_object",
+    "bbox": [1636, 924, 1855, 1049]
+  },
+  {
+    "image": "frame_0012.png",
+    "class": "test_object",
+    "bbox": [1368, 611, 1503, 840]
+  },
+  {
+    "image": "frame_0030.png",
+    "class": "test_object",
+    "bbox": [1768, 66, 1918, 311]
+  }
+]
