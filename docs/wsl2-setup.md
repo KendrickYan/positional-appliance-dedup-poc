@@ -32,7 +32,7 @@ sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt update
 sudo apt install cuda-toolkit-12-8
 ```
-CUDA 12.8 specifically — required for Blackwell (`sm_120`) GPUs.
+CUDA 12.8 specifically — required for Blackwell (`sm_120`) GPUs. Needed for COLMAP's GPU-accelerated feature extraction, matching, and dense stereo (`patch_match_stereo`).
 
 ## 4. Base tools
 
@@ -40,24 +40,7 @@ CUDA 12.8 specifically — required for Blackwell (`sm_120`) GPUs.
 sudo apt install -y python3-pip python3-venv git build-essential ffmpeg sqlite3
 ```
 
-## 5. Python + PyTorch (verify Blackwell support explicitly)
-
-Keep the project inside the WSL2 filesystem (e.g. `~/repositories/...`), not under `/mnt/c/...` — cross-boundary file I/O is noticeably slower and COLMAP does a lot of small file access.
-
-```bash
-mkdir -p ~/repositories/gaussian-splatting-poc && cd ~/repositories/gaussian-splatting-poc
-python3 -m venv .venv
-source .venv/bin/activate
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
-```
-
-Verify:
-```bash
-python3 -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0)); print(torch.cuda.get_arch_list())"
-```
-Expect `True`, your GPU's name, and `sm_120` present in the arch list.
-
-## 6. COLMAP — use conda-forge's CUDA build, not apt
+## 5. COLMAP — use conda-forge's CUDA build, not apt
 
 Ubuntu's `apt install colmap` is CPU-only. Building COLMAP from source against CUDA is fiddly (Ceres solver dependency chain); conda-forge ships a working prebuilt CUDA binary instead.
 
@@ -75,7 +58,20 @@ Expect: `COLMAP 4.2.0 (... with CUDA)`.
 
 **Known gotcha:** installing `colmap` alone via conda-forge can resolve to a build missing `libOpenImageIO.so.3.1` at runtime (`error while loading shared libraries`), even though the COLMAP package itself is fine. Installing `colmap` and `openimageio` **together in one `create` command** (as above) avoids this — installing them separately/incrementally can let conda's solver land on an inconsistent combination.
 
-This env is fully separate from the PyTorch `.venv` — `conda activate colmap_gpu` for COLMAP steps, `source .venv/bin/activate` for anything Python/PyTorch, and both can be active simultaneously without conflict.
+## 6. Python dependencies for the deduplication script
+
+Keep the project inside the WSL2 filesystem (e.g. `~/repositories/...`), not under `/mnt/c/...` — cross-boundary file I/O is noticeably slower and COLMAP does a lot of small file access.
+
+```bash
+mkdir -p ~/repositories/gaussian-splatting-poc && cd ~/repositories/gaussian-splatting-poc
+python3 -m venv .venv
+source .venv/bin/activate
+pip install numpy scipy scikit-learn plyfile matplotlib
+```
+
+This env is fully separate from the `colmap_gpu` conda environment — `conda activate colmap_gpu` for COLMAP steps, `source .venv/bin/activate` for `positional_dedup.py`/`pick_bbox.py`, and both can be active simultaneously without conflict.
+
+> **Note:** an earlier version of this POC planned to train a 3D Gaussian Splat (`gsplat`, requiring PyTorch with a `cu128` build for this GPU) and detect on rendered views from it. That approach was evaluated and dropped in favor of using COLMAP's dense MVS output directly — see `FINDINGS.md` for why. PyTorch/`gsplat` are not needed to run anything in this repo as it currently stands.
 
 ## 7. COLMAP 4.2.0 API notes (differs from 3.x docs found online)
 

@@ -14,10 +14,11 @@ Pipeline assumed already run:
 
 Usage:
     python3 positional_dedup.py
+    python3 positional_dedup.py --detections my_test_set.json
 """
 
+import argparse
 import json
-import struct
 from pathlib import Path
 from collections import defaultdict
 
@@ -209,6 +210,14 @@ def estimate_detection_position(detection, cameras, images, fused_points):
 # --- Main ------------------------------------------------------------------
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--detections", type=Path, default=DETECTIONS_PATH,
+        help=f"Path to detections JSON (default: {DETECTIONS_PATH})",
+    )
+    args = parser.parse_args()
+    detections_path = args.detections
+
     print("Loading COLMAP model...")
     cameras = load_cameras(SPARSE_TXT_DIR / "cameras.txt")
     images = load_images(SPARSE_TXT_DIR / "images.txt")
@@ -218,17 +227,17 @@ def main():
     fused_points = load_fused_points(FUSED_PLY_PATH)
     print(f"  {len(fused_points):,} points")
 
-    if not DETECTIONS_PATH.exists():
-        print(f"\nNo {DETECTIONS_PATH} found — writing a placeholder example file.")
+    if not detections_path.exists():
+        print(f"\nNo {detections_path} found — writing a placeholder example file.")
         print("Edit it with real bbox coordinates from your frames, then rerun.\n")
         example = [
             {"image": "frame_0037.png", "class": "monitor", "bbox": [100, 200, 400, 500]},
             {"image": "frame_0041.png", "class": "monitor", "bbox": [150, 210, 430, 510]},
         ]
-        DETECTIONS_PATH.write_text(json.dumps(example, indent=2))
+        detections_path.write_text(json.dumps(example, indent=2))
         return
 
-    detections = json.loads(DETECTIONS_PATH.read_text())
+    detections = json.loads(detections_path.read_text())
     print(f"\nProcessing {len(detections)} detections...")
 
     results = []

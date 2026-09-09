@@ -28,6 +28,9 @@ sparse/
 dense/
 *.bin
 
+# --- Installers ---
+Miniforge3.sh
+
 # --- OS / editor cruft ---
 .DS_Store
 Thumbs.db
@@ -38,5 +41,3 @@ Thumbs.db
 # --- Env files (in case any API keys or config get added later) ---
 .env
 .env.local
-
-Miniforge3.sh
