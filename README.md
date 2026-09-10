@@ -4,7 +4,7 @@
 
 ## The problem
 
-SoapAI (a university project generating sustainability reports for Australian SMEs by detecting electrical appliances from a scanned office) needs to count physical appliances accurately across a room scan. The hard case: two visually identical appliances in different locations — say, two matching desk monitors — must **not** be merged into one.
+A university project generating sustainability reports for Australian SMEs by detecting electrical appliances from a scanned office needs to count physical appliances accurately across a room scan. The hard case: two visually identical appliances in different locations — say, two matching desk monitors — must **not** be merged into one.
 
 Appearance-based matching (comparing detection crops via CLIP/OSNet-style embeddings) is structurally incapable of solving this: two identical monitors produce near-identical embeddings regardless of where they physically are. No amount of tuning fixes that, because the signal the approach relies on — what something looks like — doesn't encode where it is.
 
